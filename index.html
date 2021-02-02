@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <title>Work Day Scheduler</title>
+</head>
+
+<body>
+  <header class="jumbotron">
+    <h1 class="display-3">Work Day Scheduler</h1>
+    <p class="lead">A simple calendar app for scheduling your work day</p>
+    <p id="currentDay" class="lead"></p>
+  </header>
+  <div class="container">
+
+  </div>
+  <script>
+
+    var time = moment().format('dddd, MMMM Do');
+    $("#currentDay").text(time);
+
+    for (var i = 0; i <= 8; i++) {
+
+      var hour = 9 + i;
+
+      var inputDiv = $("<div class='input-group''></div>");
+      var spanInput = $("<span class='input-group-text' id='inputGroup-sizing-sm'>" + hour + "</span>");
+      var textArea = $("<textarea class='form-control' id='" + i + "' rows='3'></textarea>");
+      var divButton = $("<div class='input-group-append' id='" + i + "'></div>");
+      var button = $("<button class='btn btn-outline-secondary' type ='button' id='" + i + "'>Save</button>");
+
+
+
+      if (hour == moment().format('k')) {
+        textArea.attr('style', 'background:indianred')
+      } else if (hour < moment().format('k')) {
+        textArea.attr('style', 'background:gray')
+      } else if (hour > moment().format('k')) {
+        textArea.attr('style', 'background:limegreen')
+      }
+
+      if (hour < 12) {
+        hour = i + 9;
+        spanInput.text(hour + "am")
+      } else if (hour == 12) {
+        hour = 12;
+        spanInput.text(hour + "pm")
+      } else if (hour > 12) {
+        hour = i - 3;
+        spanInput.text(hour + "pm")
+      }
+      var buttonDiv = divButton.append(button);
+      inputDiv.append(spanInput, textArea, buttonDiv);
+      $(".container").append(inputDiv);
+
+      var note = window.localStorage.getItem(i);
+      console.log(i, note);
+      textArea.text(note);
+    }
+    if (moment().format('k') > 21) {
+      window.localStorage.clear();
+    }
+
+
+    $(".input-group-append").click(function (e) {
+      e.preventDefault()
+
+
+      var key = e.currentTarget.id;
+      var text = $(this).siblings(".form-control").val()
+      window.localStorage.setItem(key, text);
+    })
+
+
+
+  </script>
+
+
+</body>
+
+</html>
